@@ -13,8 +13,8 @@ import com.example.ai_backend_lab.dto.openai.Message;
 import com.example.ai_backend_lab.dto.openai.OpenAIResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component
-public class ChatClient {
+@Component("openai")
+public class ChatClient implements AiClient {
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
     private static final Logger log = LoggerFactory.getLogger(ChatClient.class);
@@ -22,7 +22,7 @@ public class ChatClient {
     @Value("${ai.system.prompt}")
     private String systemPrompt;
 
-    @Value("${openai.api.key}")
+    @Value("${api.key}")
     private String apiKey;
     
     public ChatClient(WebClient.Builder builder, ObjectMapper objectMapper) {
@@ -30,6 +30,7 @@ public class ChatClient {
         this.objectMapper = objectMapper;
     }
 
+    @Override
     public String getChatResponse(String userMessage) {
 
         ChatRequest chatRequest = new ChatRequest();
