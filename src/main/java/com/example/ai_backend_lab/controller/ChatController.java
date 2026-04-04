@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ai_backend_lab.dto.user.CreateChatRequest;
 import com.example.ai_backend_lab.dto.user.UserRequest;
 import com.example.ai_backend_lab.dto.user.UserResponse;
 import com.example.ai_backend_lab.service.ChatService;
@@ -31,5 +32,19 @@ public class ChatController {
         String reply = chatService.getReply(userRequest.getMessage());
         return new UserResponse(reply);
     }
+
+
+    @PostMapping("/start")
+    public Integer startChat(@RequestBody CreateChatRequest createChatRequest) {
+        Integer chatId = -1;
+        try {
+            chatId = chatService.createChat(createChatRequest);
+        }catch(Exception ex) {
+            log.error("Failed to create chat", ex);
+        }
+
+        return chatId;
+    }
+    
     
 }
