@@ -12,5 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Content {
+    String role;
     List<Part> parts;
 }

@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.example.ai_backend_lab.dto.openai.ChatRequest;
 import com.example.ai_backend_lab.dto.openai.Message;
 import com.example.ai_backend_lab.dto.openai.OpenAIResponse;
+import com.example.ai_backend_lab.entities.Chat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component("openai")
@@ -74,5 +75,10 @@ public class ChatClient implements AiClient {
             log.error("Failed to parse response from OpenAI: {}", e.getMessage());
             throw new RuntimeException("Parsing failed", e);
         }
+    }
+
+    @Override
+    public String getChatResponse(Chat chat) {
+        return "";
     }
 }

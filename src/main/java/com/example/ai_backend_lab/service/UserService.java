@@ -19,7 +19,7 @@ public class UserService {
     public UUID createUser(CreateUserRequest createUserRequest) throws Exception {
         User user = new User();
 
-        if(userRepository.findByEmail(createUserRequest.getEmail()) != null) {
+        if (userRepository.findByEmail(createUserRequest.getEmail()).isPresent()) {
             throw new Exception("User already exists!");
         }
 

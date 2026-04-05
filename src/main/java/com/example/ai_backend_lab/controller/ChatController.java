@@ -2,6 +2,7 @@ package com.example.ai_backend_lab.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,11 +26,26 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @PostMapping
+    @PostMapping("/ask-ai")
     public UserResponse askQuestion(@RequestBody UserRequest userRequest) {
         log.info("Received /chat request");
         
         String reply = chatService.getReply(userRequest.getMessage());
+        return new UserResponse(reply);
+    }
+
+     @PostMapping("/{id}/message")
+    public UserResponse chatMessage(@PathVariable Integer id,@RequestBody UserRequest userRequest) {
+        log.info("Received /chat/{}/message request",id);
+        
+        String reply = null;
+
+        try {
+            reply = chatService.getReplyForChat(id, userRequest.getMessage());
+        } catch (Exception ex) {
+            log.error("Failed to get a response from AI " + ex);
+        }
+        
         return new UserResponse(reply);
     }
 

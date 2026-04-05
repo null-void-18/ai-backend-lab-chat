@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.ai_backend_lab.dto.openai.GeminiRequest;
 import com.example.ai_backend_lab.dto.openai.GeminiResponse;
+import com.example.ai_backend_lab.entities.Chat;
 
 @Component("gemini")
 public class GeminiClient implements AiClient {
@@ -59,4 +60,34 @@ public class GeminiClient implements AiClient {
                 .get(0)
                 .getText();
     }
+
+    @Override
+    public String getChatResponse(Chat chat) {
+
+        GeminiRequest geminiRequest = GeminiRequest.fromPrompt(chat);
+
+        GeminiResponse response = webClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/models/gemini-2.5-flash:generateContent")
+                        .queryParam("key", apiKey)
+                        .build())
+                .bodyValue(geminiRequest)
+                .retrieve()
+                .onStatus(status -> status.isError(), res ->
+                        res.bodyToMono(String.class)
+                                .map(body -> new RuntimeException("API Error: " + body))
+                )
+                .bodyToMono(GeminiResponse.class)
+                .block();
+
+        log.info("Received response from Gemini");
+
+        return response.getCandidates()
+                .get(0)
+                .getContent()
+                .getParts()
+                .get(0)
+                .getText();
+    }
+
 }
