@@ -18,9 +18,12 @@ import lombok.Setter;
 public class GeminiRequest {
     List<Content> contents;
 
-    public static GeminiRequest fromPrompt(String message) {
+    public static GeminiRequest fromPrompt(String systemPrompt,String message) {
         return new GeminiRequest(
                 List.of(
+                        new Content(
+                               "user", List.of(new Part(systemPrompt))
+                        ),
                         new Content(
                                "user", List.of(new Part(message))
                         )

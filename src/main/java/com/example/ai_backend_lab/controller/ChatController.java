@@ -2,11 +2,13 @@ package com.example.ai_backend_lab.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.ai_backend_lab.dto.user.CreateChatRequest;
 import com.example.ai_backend_lab.dto.user.UserRequest;
@@ -44,6 +46,7 @@ public class ChatController {
             reply = chatService.getReplyForChat(id, userRequest.getMessage());
         } catch (Exception ex) {
             log.error("Failed to get a response from AI " + ex);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AI failed");
         }
         
         return new UserResponse(reply);

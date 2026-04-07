@@ -31,9 +31,7 @@ public class GeminiClient implements AiClient {
     @Override
     public String getChatResponse(String userMessage) {
 
-        String finalPrompt = systemPrompt + "\nUser: " + userMessage;
-
-        GeminiRequest geminiRequest = GeminiRequest.fromPrompt(finalPrompt);
+        GeminiRequest geminiRequest = GeminiRequest.fromPrompt(systemPrompt,userMessage);
 
         log.info("Sending request to Gemini with message: {}", userMessage);
 
@@ -88,6 +86,12 @@ public class GeminiClient implements AiClient {
                 .getParts()
                 .get(0)
                 .getText();
+    }
+
+
+    @Override
+    public void initializeChat(Chat chat) {
+        //doesn't need initialization for now as Gemini does not have a system role
     }
 
 }

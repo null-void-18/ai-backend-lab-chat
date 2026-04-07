@@ -6,4 +6,6 @@ public interface AiClient {
     String getChatResponse(String input);
 
     String getChatResponse(Chat chat);
+
+    void initializeChat(Chat chat); 
 }

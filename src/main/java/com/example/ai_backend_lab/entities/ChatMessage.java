@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.example.ai_backend_lab.enums.Provider;
 import com.example.ai_backend_lab.enums.Role;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -31,6 +32,7 @@ public class ChatMessage {
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(EnumType.STRING)
