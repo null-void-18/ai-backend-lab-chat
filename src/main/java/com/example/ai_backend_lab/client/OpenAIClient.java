@@ -64,9 +64,9 @@ public class OpenAIClient implements AiClient {
 
             return response.getChoices().get(0).getMessage().getContent();
 
-        } catch (Exception e) {
-            log.error("Failed to parse response from OpenAI: {}", e.getMessage());
-            throw new RuntimeException("Parsing failed", e);
+        } catch (Exception ex) {
+            log.error("Failed to parse response from OpenAI: {}", ex.getMessage());
+            throw new RuntimeException("Parsing failed", ex);
         }
     }
 

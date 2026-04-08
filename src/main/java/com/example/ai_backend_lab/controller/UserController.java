@@ -32,7 +32,7 @@ public class UserController {
         try {
             id = userService.createUser(createUserRequest);
         } catch (Exception ex) {
-            log.error("Failed to create user" + ex);
+            log.error("Failed to create user" + ex.getMessage());
         }
     
         return id;

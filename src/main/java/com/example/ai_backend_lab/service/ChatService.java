@@ -115,7 +115,7 @@ public class ChatService {
 
             return response;
         }catch(Exception ex) {
-            log.error("AI service failed", ex);
+            log.error("AI service failed", ex.getMessage());
             return "Sorry AI is not available right now. Please try after sometime";
         }
 

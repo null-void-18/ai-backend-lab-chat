@@ -50,7 +50,7 @@ public class ChatController {
         try {
             reply = chatService.getReplyForChat(id, userRequest.getMessage());
         } catch (Exception ex) {
-            log.error("Failed to get a response from AI " + ex);
+            log.error("Failed to get a response from AI " + ex.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AI failed");
         }
         
@@ -64,7 +64,7 @@ public class ChatController {
         try {
             chatId = chatService.createChat(createChatRequest);
         }catch(Exception ex) {
-            log.error("Failed to create chat", ex);
+            log.error("Failed to create chat", ex.getMessage());
         }
 
         return chatId;
