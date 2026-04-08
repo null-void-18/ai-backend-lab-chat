@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.ai_backend_lab.client.AiClient;
 import com.example.ai_backend_lab.dto.openai.ChatMessageResponse;
+import com.example.ai_backend_lab.dto.openai.PageableResponse;
 import com.example.ai_backend_lab.dto.user.CreateChatRequest;
 import com.example.ai_backend_lab.entities.Chat;
 import com.example.ai_backend_lab.entities.ChatMessage;
@@ -151,14 +152,20 @@ public class ChatService {
     }
 
 
-    public Page<ChatMessageResponse> getChatMessages(Integer chatId, int page, int size) {
+    public PageableResponse<ChatMessageResponse> getChatMessages(Integer chatId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
         Page<ChatMessage> messages = messageRepository.findByChatId(chatId, pageable);
 
         Page<ChatMessageResponse> messageResponse = messages.map(this::mapToResponse);
 
-        return messageResponse;
+        return new PageableResponse<>(
+            messageResponse.getContent(),
+            messageResponse.getNumber(),
+            messageResponse.getSize(),
+            messageResponse.getTotalElements(),
+            messageResponse.getTotalPages()
+        );
     }
 
 

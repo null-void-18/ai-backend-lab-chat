@@ -2,7 +2,6 @@ package com.example.ai_backend_lab.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.ai_backend_lab.dto.openai.ChatMessageResponse;
+import com.example.ai_backend_lab.dto.openai.PageableResponse;
 import com.example.ai_backend_lab.dto.user.CreateChatRequest;
 import com.example.ai_backend_lab.dto.user.UserRequest;
 import com.example.ai_backend_lab.dto.user.UserResponse;
@@ -72,7 +72,7 @@ public class ChatController {
     
 
     @GetMapping("/{id}/messages")
-    public Page<ChatMessageResponse> getMethodName(@PathVariable Integer id,
+    public PageableResponse<ChatMessageResponse> getMethodName(@PathVariable Integer id,
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "20") int size
     ) {
