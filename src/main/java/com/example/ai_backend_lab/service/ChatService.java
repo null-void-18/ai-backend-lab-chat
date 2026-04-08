@@ -8,15 +8,21 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.ai_backend_lab.client.AiClient;
+import com.example.ai_backend_lab.dto.openai.ChatMessageResponse;
 import com.example.ai_backend_lab.dto.user.CreateChatRequest;
 import com.example.ai_backend_lab.entities.Chat;
 import com.example.ai_backend_lab.entities.ChatMessage;
 import com.example.ai_backend_lab.entities.User;
 import com.example.ai_backend_lab.enums.Role;
 import com.example.ai_backend_lab.repository.ChatRepository;
+import com.example.ai_backend_lab.repository.MessageRepository;
 import com.example.ai_backend_lab.repository.UserRepository;
 
 @Service
@@ -27,14 +33,16 @@ public class ChatService {
 
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
+    private final MessageRepository messageRepository;
 
     @Value("${ai.provider}")
     private String provider;
 
-    public ChatService(Map<String,AiClient> clients, UserRepository userRepository, ChatRepository chatRepository) {
+    public ChatService(Map<String,AiClient> clients, UserRepository userRepository, ChatRepository chatRepository,MessageRepository messageRepository) {
         this.clients = clients;
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
+        this.messageRepository = messageRepository;
     }
 
     public String getReply(String message) {
@@ -140,5 +148,25 @@ public class ChatService {
         chatRepository.save(chat);
         
         return chat.getId();
+    }
+
+
+    public Page<ChatMessageResponse> getChatMessages(Integer chatId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<ChatMessage> messages = messageRepository.findByChatId(chatId, pageable);
+
+        Page<ChatMessageResponse> messageResponse = messages.map(this::mapToResponse);
+
+        return messageResponse;
+    }
+
+
+    private ChatMessageResponse mapToResponse(ChatMessage chatMessage) {
+        return new ChatMessageResponse(
+            chatMessage.getContent(),
+            chatMessage.getRole(),
+            chatMessage.getCreatedAt()
+        );
     }
 }
